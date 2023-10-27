@@ -9,7 +9,16 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    // Allow React Globally
     "react/react-in-jsx-scope": "off",
+    // Allow Typescript, not JavaScript Components
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }]
-  }
+  },
+  "overrides": [
+    {
+      // Allow Redux Reducer Param Reassignment
+      "files": ["app/**/*.slice.ts"],
+      "rules": { "no-param-reassign": ["error", { "props": false }] }
+    }
+  ]
 }
