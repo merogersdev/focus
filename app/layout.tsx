@@ -1,6 +1,4 @@
 import "./globals.css";
-import ThemeSwitcher from "./components/ThemeSwitch";
-import Theme from "./components/Theme";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -21,12 +19,7 @@ export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <StateProvider>
-          {/* <Theme>
-            <ThemeSwitcher /> */}
-          {children}
-          {/* </Theme> */}
-        </StateProvider>
+        <StateProvider>{children}</StateProvider>
       </body>
     </html>
   );

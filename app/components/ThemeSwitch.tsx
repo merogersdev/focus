@@ -1,23 +1,36 @@
 "use client";
-
-import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 
 export default function ThemeSwitch() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
+  const currentTheme = resolvedTheme ? resolvedTheme : "light";
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  function handleSwitch() {
+    if (currentTheme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  }
 
   return (
-    <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-      <option value="system">System</option>
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
-    </select>
+    <div className="flex items-center">
+      <span>Dark Mode</span>
+      <label
+        htmlFor="dark-mode"
+        className="bg-gray-100 cursor-pointer relative w-20 h-10 rounded-full mx-4"
+      >
+        <input
+          type="checkbox"
+          id="dark-mode"
+          name="dark-mode"
+          className="sr-only peer"
+          checked={currentTheme === "dark"}
+          onChange={() => handleSwitch()}
+        />
+        <span className="w-2/5 h-4/5 bg-rose-300 absolute rounded-full left-1 top-1 peer-checked:bg-rose-600 peer-checked:left-11"></span>
+      </label>
+      <span>{currentTheme === "dark" ? "On" : "Off"}</span>
+    </div>
   );
 }

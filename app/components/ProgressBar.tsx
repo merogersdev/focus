@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import modeColor, { nextMode } from "../util/mode";
 import { calcTotalSeconds } from "../util/time";
-
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import {
@@ -60,6 +59,7 @@ export default function ProgressBar() {
       dispatch(increment("elapsed"));
     }, 1000);
 
+    // Cleanup interval
     return () => window.clearInterval(interval);
   }, [elapsedSeconds, dispatch, increment, isPaused, currentMode]);
 
@@ -73,11 +73,11 @@ export default function ProgressBar() {
   );
   const percentage = 100 - Math.floor((elapsedSeconds / totalSeconds) * 100);
 
-  const m = Math.floor((totalSeconds - elapsedSeconds) / 60);
-  const s = (totalSeconds - elapsedSeconds) % 60;
+  const minutes = Math.floor((totalSeconds - elapsedSeconds) / 60);
+  const seconds = (totalSeconds - elapsedSeconds) % 60;
 
-  const displayMinutes = m < 10 ? `0${m}` : m;
-  const displaySeconds = s < 10 ? `0${s}` : s;
+  const displayMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const displaySeconds = seconds < 10 ? `0${seconds}` : seconds;
 
   // SVG Circle
   const radius = 100;
@@ -87,7 +87,7 @@ export default function ProgressBar() {
   return (
     <>
       <div className="flex relative">
-        <div className="flex items-center justify-center absolute w-full h-full text-4xl text-gray-700 font-semibold">
+        <div className="flex items-center justify-center absolute w-full h-full text-4xl text-gray-700 dark:text-white font-semibold">
           {displayMinutes}:{displaySeconds}
         </div>
         <svg
@@ -119,11 +119,7 @@ export default function ProgressBar() {
       </div>
       <button
         className="flex px-4 py-2 bg-gray-300 rounded-sm"
-        onClick={() => {
-          // setIsPaused((prev) => !prev);
-          // isPausedRef.current = !isPausedRef.current;
-          dispatch(togglePause());
-        }}
+        onClick={() => dispatch(togglePause())}
       >
         {isPaused ? "Play" : "Pause"}
       </button>

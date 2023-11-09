@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
+import Spinner from "./Spinner";
 import type { ReactNode } from "react";
 
 type ThemeProps = {
@@ -15,7 +16,12 @@ export default function Theme({ children }: ThemeProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <>{children}</>;
+  if (!mounted)
+    return (
+      <div className="flex w-full h-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   return <ThemeProvider attribute="class">{children}</ThemeProvider>;
 }
