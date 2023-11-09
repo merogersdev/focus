@@ -16,11 +16,15 @@ export default function modeColor(mode: string) {
   return color;
 }
 
-export function nextMode(mode: string, focusSession: number) {
+export function nextMode(
+  mode: string,
+  focusSession: number,
+  totalSessions: number
+) {
   let next = null;
   switch (mode) {
     case "focus":
-      next = focusSession === 4 ? "long" : "short";
+      next = focusSession === totalSessions ? "long" : "short";
       break;
     case "short":
       next = "focus";

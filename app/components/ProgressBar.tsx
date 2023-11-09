@@ -1,51 +1,83 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import modeColor from "../util/mode";
-import calcSeconds from "../util/time";
+import { useEffect } from "react";
+import modeColor, { nextMode } from "../util/mode";
+import { calcTotalSeconds } from "../util/time";
 
-type ProgressBarProps = {
-  focusMinutes: number;
-  shortBreak: number;
-  longBreak: number;
-};
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../redux/store";
+import {
+  togglePause,
+  increment,
+  globalReset,
+  resetElapsed,
+  setMode,
+} from "../redux/slices/time";
 
-export default function ProgressBar({
-  focusMinutes = 45,
-  shortBreak = 5,
-  longBreak = 15,
-}: ProgressBarProps) {
-  // State
-  const [isPaused, setIsPaused] = useState(false);
-  const [mode, setMode] = useState("focus");
-  const [seconds, setSeconds] = useState(focusMinutes * 60);
-  const [focusSession, setFocusSession] = useState(1);
+export default function ProgressBar() {
+  const {
+    isPaused,
+    autoPause,
+    currentMode,
+    elapsedSeconds,
+    focusMinutes,
+    totalFocusSessions,
+    currentFocusSession,
+    shortBreakMinutes,
+    longBreakMinutes,
+  } = useSelector((state: RootState) => state.time);
 
-  // Refs
-  const isPausedRef = useRef(isPaused);
-  const secondsRef = useRef(seconds);
-
-  function tick() {
-    secondsRef.current--;
-    setSeconds(secondsRef.current);
-  }
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (isPausedRef.current) return;
-      // TODO: Set next focus/break
-      if (secondsRef.current === 0) return;
-      tick();
+    const interval = window.setInterval(() => {
+      // Pause
+      if (isPaused) return;
+
+      // Next mode
+      if (elapsedSeconds === totalSeconds) {
+        dispatch(
+          setMode(
+            nextMode(currentMode, currentFocusSession, totalFocusSessions)
+          )
+        );
+        dispatch(resetElapsed());
+        if (autoPause) dispatch(togglePause());
+      }
+
+      // Add a focus session
+      if (elapsedSeconds === totalSeconds && currentMode !== "focus") {
+        dispatch(increment("session"));
+      }
+
+      // Reset after long break
+      if (elapsedSeconds === totalSeconds && currentMode === "long") {
+        dispatch(globalReset());
+        return;
+      }
+
+      // Tick
+      dispatch(increment("elapsed"));
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => window.clearInterval(interval);
+  }, [elapsedSeconds, dispatch, increment, isPaused, currentMode]);
 
   // Time
   const circleWidth = 250;
-  const percentage = Math.floor((seconds / (focusMinutes * 60)) * 100);
-  const m = Math.floor(seconds / 60);
-  let s = seconds % 60;
+  const totalSeconds = calcTotalSeconds(
+    currentMode,
+    focusMinutes,
+    shortBreakMinutes,
+    longBreakMinutes
+  );
+  const percentage = 100 - Math.floor((elapsedSeconds / totalSeconds) * 100);
+
+  const m = Math.floor((totalSeconds - elapsedSeconds) / 60);
+  const s = (totalSeconds - elapsedSeconds) % 60;
+
+  const displayMinutes = m < 10 ? `0${m}` : m;
+  const displaySeconds = s < 10 ? `0${s}` : s;
 
   // SVG Circle
   const radius = 100;
@@ -56,7 +88,7 @@ export default function ProgressBar({
     <>
       <div className="flex relative">
         <div className="flex items-center justify-center absolute w-full h-full text-4xl text-gray-700 font-semibold">
-          {`${m}:${s < 10 ? `0${s}` : s}`}
+          {displayMinutes}:{displaySeconds}
         </div>
         <svg
           width={circleWidth}
@@ -75,8 +107,12 @@ export default function ProgressBar({
             cy={circleWidth / 2}
             strokeWidth="15px"
             r={radius}
-            className={`fill-none ${modeColor(mode)}`}
-            style={{ strokeDasharray: dashArray, strokeDashoffset: dashOffset }}
+            className={`fill-none ${modeColor(currentMode)}`}
+            style={{
+              strokeDasharray: dashArray,
+              strokeDashoffset: dashOffset,
+              transition: "stroke-dashoffset 0.1s linear",
+            }}
             transform={`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`}
           />
         </svg>
@@ -84,18 +120,16 @@ export default function ProgressBar({
       <button
         className="flex px-4 py-2 bg-gray-300 rounded-sm"
         onClick={() => {
-          setIsPaused((prev) => !prev);
-          isPausedRef.current = !isPausedRef.current;
+          // setIsPaused((prev) => !prev);
+          // isPausedRef.current = !isPausedRef.current;
+          dispatch(togglePause());
         }}
       >
         {isPaused ? "Play" : "Pause"}
       </button>
       <button
         className="flex px-4 py-2 bg-gray-300 rounded-sm"
-        onClick={() => {
-          setSeconds(focusMinutes * 60);
-          secondsRef.current = focusMinutes * 60;
-        }}
+        onClick={() => dispatch(globalReset())}
       >
         Reset
       </button>

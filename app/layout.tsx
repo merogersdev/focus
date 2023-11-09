@@ -4,9 +4,7 @@ import Theme from "./components/Theme";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-
-// import { store } from "./redux/store";
-// import { Provider } from "react-redux";
+import { StateProvider } from "./components/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,10 +21,12 @@ export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Theme>
-          <ThemeSwitcher />
+        <StateProvider>
+          {/* <Theme>
+            <ThemeSwitcher /> */}
           {children}
-        </Theme>
+          {/* </Theme> */}
+        </StateProvider>
       </body>
     </html>
   );
