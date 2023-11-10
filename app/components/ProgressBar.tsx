@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import modeColor, { nextMode } from "../util/mode";
+import modeColor, { nextMode, formatMode } from "../util/mode";
 import { calcTotalSeconds } from "../util/time";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
@@ -12,6 +12,8 @@ import {
   resetElapsed,
   setMode,
 } from "../redux/slices/time";
+import Button from "./Button";
+import LinkButton from "./LinkButton";
 
 export default function ProgressBar() {
   const {
@@ -27,41 +29,7 @@ export default function ProgressBar() {
   } = useSelector((state: RootState) => state.time);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      // Pause
-      if (isPaused) return;
-
-      // Next mode
-      if (elapsedSeconds === totalSeconds) {
-        dispatch(
-          setMode(
-            nextMode(currentMode, currentFocusSession, totalFocusSessions)
-          )
-        );
-        dispatch(resetElapsed());
-        if (autoPause) dispatch(togglePause());
-      }
-
-      // Add a focus session
-      if (elapsedSeconds === totalSeconds && currentMode !== "focus") {
-        dispatch(increment("session"));
-      }
-
-      // Reset after long break
-      if (elapsedSeconds === totalSeconds && currentMode === "long") {
-        dispatch(globalReset());
-        return;
-      }
-
-      // Tick
-      dispatch(increment("elapsed"));
-    }, 1000);
-
-    // Cleanup interval
-    return () => window.clearInterval(interval);
-  }, [elapsedSeconds, dispatch, increment, isPaused, currentMode]);
+  let notificationSound = new Audio("./sounds/fart.mp3");
 
   // Time
   const circleWidth = 250;
@@ -84,10 +52,54 @@ export default function ProgressBar() {
   const dashArray = radius * Math.PI * 2;
   const dashOffset = dashArray - (dashArray * percentage) / 100;
 
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      // Pause
+      if (isPaused) return;
+
+      // Next mode
+      if (elapsedSeconds === totalSeconds) {
+        dispatch(
+          setMode(
+            nextMode(currentMode, currentFocusSession, totalFocusSessions)
+          )
+        );
+        dispatch(resetElapsed());
+        // TODO: Replace Sound!!!
+        notificationSound.play();
+        if (autoPause) dispatch(togglePause());
+      }
+
+      // Add a focus session
+      if (elapsedSeconds === totalSeconds && currentMode !== "focus") {
+        dispatch(increment("session"));
+      }
+
+      // Reset after long break
+      if (elapsedSeconds === totalSeconds && currentMode === "long") {
+        dispatch(globalReset());
+        return;
+      }
+
+      // Tick
+      dispatch(increment("elapsed"));
+    }, 1000);
+
+    // Cleanup interval
+    return () => window.clearInterval(interval);
+  }, [elapsedSeconds, dispatch, increment, isPaused, currentMode]);
+
+  // Display/Update Timer in Document Title
+  useEffect(() => {
+    document.title = `${formatMode(
+      currentMode
+    )} ${displayMinutes}:${displaySeconds} `;
+  }, [elapsedSeconds]);
+
   return (
     <>
       <div className="flex relative">
-        <div className="flex items-center justify-center absolute w-full h-full text-4xl text-gray-700 dark:text-white font-semibold">
+        <div className="flex items-center justify-center absolute w-full h-full text-4xl text-slate-800 dark:text-slate-50 font-semibold">
           {displayMinutes}:{displaySeconds}
         </div>
         <svg
@@ -117,18 +129,42 @@ export default function ProgressBar() {
           />
         </svg>
       </div>
-      <button
-        className="flex px-4 py-2 bg-gray-300 rounded-sm"
-        onClick={() => dispatch(togglePause())}
-      >
-        {isPaused ? "Play" : "Pause"}
-      </button>
-      <button
-        className="flex px-4 py-2 bg-gray-300 rounded-sm"
-        onClick={() => dispatch(globalReset())}
-      >
-        Reset
-      </button>
+      <div className="flex flex-col">
+        <button
+          className="flex justify-center mb-16 mt-4"
+          onClick={() => dispatch(togglePause())}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="stroke-slate-700 hover:stroke-slate-500 dark:stroke-slate-50 dark:hover:stroke-slate-300 transition-colors feather feather-play-circle"
+          >
+            {isPaused ? (
+              <>
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </>
+            ) : (
+              <>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="10" y1="15" x2="10" y2="9"></line>
+                <line x1="14" y1="15" x2="14" y2="9"></line>
+              </>
+            )}
+          </svg>
+        </button>
+      </div>
+      <div className="flex w-80 justify-between">
+        <Button text="Reset" onClick={() => dispatch(globalReset())} />
+        <LinkButton href="/config" text="Config" />
+      </div>
     </>
   );
 }

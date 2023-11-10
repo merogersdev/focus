@@ -1,15 +1,16 @@
 import ProgressBar from "./components/ProgressBar";
 import Theme from "./components/Theme";
-import ThemeSwitch from "./components/ThemeSwitch";
+
+import Main from "./components/Main";
+import Header from "./components/Header";
 
 export default function Home() {
   return (
     <Theme>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <h1 className="text-black dark:text-white">Focus</h1>
+      <Main>
+        <Header />
         <ProgressBar />
-        <ThemeSwitch />
-      </main>
+      </Main>
     </Theme>
   );
 }

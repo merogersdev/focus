@@ -11,6 +11,7 @@ export interface TimeState {
   shortBreakMinutes: number;
   longBreakMinutes: number;
   elapsedSeconds: number;
+  audio: boolean;
 }
 
 const initialState: TimeState = {
@@ -23,6 +24,7 @@ const initialState: TimeState = {
   shortBreakMinutes: 1,
   longBreakMinutes: 1,
   elapsedSeconds: 0,
+  audio: true,
 };
 
 export const timeSlice = createSlice({
@@ -76,6 +78,12 @@ export const timeSlice = createSlice({
     togglePause: (state: TimeState) => {
       state.isPaused = !state.isPaused;
     },
+    toggleAutoPause: (state: TimeState) => {
+      state.autoPause = !state.autoPause;
+    },
+    toggleAudio: (state: TimeState) => {
+      state.audio = !state.audio;
+    },
     globalReset: (_state: TimeState) => {
       return initialState;
     },
@@ -93,6 +101,8 @@ export const {
   resetElapsed,
   resetFocusSessions,
   setMode,
+  toggleAutoPause,
+  toggleAudio,
 } = timeSlice.actions;
 
 export default timeSlice.reducer;

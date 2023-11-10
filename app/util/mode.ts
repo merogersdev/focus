@@ -37,3 +37,16 @@ export function nextMode(
   }
   return next;
 }
+
+export function formatMode(mode: string) {
+  switch (mode) {
+    case "focus":
+      return "Focus:";
+    case "short":
+      return "Break:";
+    case "long":
+      return "Break:";
+    default:
+      return mode;
+  }
+}
