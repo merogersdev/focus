@@ -18,11 +18,11 @@ const initialState: TimeState = {
   isPaused: true,
   autoPause: false,
   currentMode: "focus",
-  focusMinutes: 1,
+  focusMinutes: 25,
   totalFocusSessions: 4,
   currentFocusSession: 1,
-  shortBreakMinutes: 1,
-  longBreakMinutes: 1,
+  shortBreakMinutes: 5,
+  longBreakMinutes: 15,
   elapsedSeconds: 0,
   audio: true,
 };
@@ -48,6 +48,9 @@ export const timeSlice = createSlice({
         case "session":
           state.currentFocusSession += 1;
           break;
+        case "total":
+          state.totalFocusSessions += 1;
+          break;
         default:
           return state;
       }
@@ -65,6 +68,12 @@ export const timeSlice = createSlice({
           break;
         case "elapsed":
           state.elapsedSeconds -= 1;
+        case "session":
+          state.currentFocusSession -= 1;
+          break;
+        case "total":
+          state.totalFocusSessions -= 1;
+          break;
         default:
           return state;
       }

@@ -33,9 +33,13 @@ export default function Switch({
         <span className="w-2/5 h-4/5 bg-red-300 absolute rounded-full left-1 top-1 peer-checked:bg-green-400 peer-checked:left-11"></span>
       </label>
       {name === check ? (
-        <span className="text-green-600 dark:text-green-400">On</span>
+        <span className="text-green-600 dark:text-green-400 font-semibold">
+          On
+        </span>
       ) : (
-        <span className="text-red-600 dark:text-red-400">Off</span>
+        <span className="text-red-600 dark:text-red-400 font-semibold">
+          Off
+        </span>
       )}
     </div>
   );

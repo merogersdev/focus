@@ -1,21 +1,32 @@
 import Theme from "../components/Theme";
 import Main from "../components/Main";
-import Header from "../components/Header";
 import LinkButton from "../components/LinkButton";
-import SwitchTheme from "../components/SwitchTheme";
-import SwitchAutoPause from "../components/SwitchAutoPause";
-import SwitchAudio from "../components/SwitchAudio";
+import SwitchTheme from "../components/switch/SwitchTheme";
+import SwitchAutoPause from "../components/switch/SwitchAutoPause";
+import SwitchAudio from "../components/switch/SwitchAudio";
+import CounterFocus from "../components/counter/CounterFocus";
+import CounterShort from "../components/counter/CounterShort";
+import CounterLong from "../components/counter/CounterLong";
+import CounterSessions from "../components/counter/CounterSessions";
+import { H1 } from "../components/Typography";
 
 export default function Config() {
   return (
     <Theme>
       <Main>
-        <h1 className="text-3xl font-medium mb-8">Configure Focus</h1>
-        <SwitchTheme />
-        <SwitchAutoPause />
-        <SwitchAudio />
-
-        <div className="flex w-80 justify-between mt-8">
+        <H1>Configure Focus</H1>
+        <div>
+          <CounterFocus />
+          <CounterShort />
+          <CounterLong />
+          <CounterSessions />
+        </div>
+        <div className="mb-8">
+          <SwitchTheme />
+          <SwitchAutoPause />
+          <SwitchAudio />
+        </div>
+        <div className="flex w-80 justify-between">
           <LinkButton href="/" text="Back" />
         </div>
       </Main>

@@ -26,6 +26,7 @@ export default function ProgressBar() {
     currentFocusSession,
     shortBreakMinutes,
     longBreakMinutes,
+    audio,
   } = useSelector((state: RootState) => state.time);
 
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export default function ProgressBar() {
         );
         dispatch(resetElapsed());
         // TODO: Replace Sound!!!
-        notificationSound.play();
+        if (audio) notificationSound.play();
         if (autoPause) dispatch(togglePause());
       }
 

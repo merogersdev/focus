@@ -2,25 +2,25 @@
 
 import Switch from "./Switch";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/store";
-import { toggleAudio } from "../redux/slices/time";
+import { RootState } from "../../redux/store";
+import { toggleAutoPause } from "../../redux/slices/time";
 
 export default function SwitchAutoPause() {
-  const { audio } = useSelector((state: RootState) => state.time);
+  const { autoPause } = useSelector((state: RootState) => state.time);
 
   const dispatch = useDispatch();
 
   function handleSwitch() {
-    dispatch(toggleAudio());
+    dispatch(toggleAutoPause());
   }
 
   return (
     <Switch
-      text="Play Sounds"
-      name={audio}
+      text="Auto Pause"
+      name={autoPause}
       onChange={handleSwitch}
       check={true}
-      id="play-audio"
+      id="auto-pause"
     />
   );
 }
