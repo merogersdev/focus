@@ -68,6 +68,7 @@ export const timeSlice = createSlice({
           break;
         case "elapsed":
           state.elapsedSeconds -= 1;
+          break;
         case "session":
           state.currentFocusSession -= 1;
           break;
@@ -93,7 +94,7 @@ export const timeSlice = createSlice({
     toggleAudio: (state: TimeState) => {
       state.audio = !state.audio;
     },
-    globalReset: (_state: TimeState) => {
+    globalReset: () => {
       return initialState;
     },
     setMode: (state: TimeState, action: PayloadAction<string>) => {

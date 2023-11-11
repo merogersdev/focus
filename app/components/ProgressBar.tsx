@@ -30,7 +30,6 @@ export default function ProgressBar() {
   } = useSelector((state: RootState) => state.time);
 
   const dispatch = useDispatch();
-  let notificationSound = new Audio("./sounds/fart.mp3");
 
   // Time
   const circleWidth = 250;
@@ -66,7 +65,7 @@ export default function ProgressBar() {
           )
         );
         dispatch(resetElapsed());
-        // TODO: Replace Sound!!!
+        const notificationSound = new Audio("./sounds/notification.mp3");
         if (audio) notificationSound.play();
         if (autoPause) dispatch(togglePause());
       }
@@ -88,14 +87,24 @@ export default function ProgressBar() {
 
     // Cleanup interval
     return () => window.clearInterval(interval);
-  }, [elapsedSeconds, dispatch, increment, isPaused, currentMode]);
+  }, [
+    elapsedSeconds,
+    dispatch,
+    isPaused,
+    currentMode,
+    audio,
+    autoPause,
+    currentFocusSession,
+    totalFocusSessions,
+    totalSeconds,
+  ]);
 
   // Display/Update Timer in Document Title
   useEffect(() => {
     document.title = `${formatMode(
       currentMode
     )} ${displayMinutes}:${displaySeconds} `;
-  }, [elapsedSeconds]);
+  }, [elapsedSeconds, currentMode, displayMinutes, displaySeconds]);
 
   return (
     <>
