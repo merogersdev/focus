@@ -62,8 +62,9 @@ jobs:
       - name: Delete old container
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.REPOSITORY }}
         run: |
-          docker rm -f $ECR_REPOSITORY || true
+          docker stop $ECR_REPOSITORY || true && docker rm $ECR_REPOSITORY || true
       - name: Run new container
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
