@@ -32,3 +32,19 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  deploy:
+    needs: build-and-push
+    runs-on: [self-hosted]
+    env:
+      SHA: ${{ github.sha }}
+      ECR_REGISTRY: ${{ needs.steps.build-image.env.ECR_REGISTRY }}
+      ECR_REPOSITORY: ${{ needs.steps.build-image.env.ECR_REPOSITORY }}
+      IMAGE_TAG: ${{ needs.steps.build-image.env.IMAGE_TAG }}
+    steps:
+      - name: Pull image from AWS ECS
+        run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Delete old container
+        run: docker rm -f $ECR_REPOSITORY
+      - name: Run new container
+        run: docker run -d -p 3000:3000 --name $ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
