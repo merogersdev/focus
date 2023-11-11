@@ -58,7 +58,7 @@ jobs:
           docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Delete old container
         run: |
-          docker rm -f $ECR_REPOSITORY &>/dev/null && echo 'Removed old container'
+          docker rm -f $ECR_REPOSITORY || true
       - name: Run new container
         run: |
           docker run -d -p 3000:3000 --name $ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
