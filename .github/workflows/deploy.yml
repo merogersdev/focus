@@ -39,6 +39,8 @@ jobs:
     runs-on: [self-hosted]
     env:
       SHA: ${{ github.sha }}
+      REPOSITORY: "focus"
+      IMAGE_TAG: "latest"
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -52,13 +54,19 @@ jobs:
       - name: Pull image from AWS ECS
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: focus
-          IMAGE_TAG: latest
+          ECR_REPOSITORY: ${{ env.REPOSITORY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
           docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Delete old container
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           docker rm -f $ECR_REPOSITORY || true
       - name: Run new container
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.REPOSITORY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
           docker run -d -p 3000:3000 --name $ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
