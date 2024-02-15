@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  distDir: "build",
-  trailingSlash: true,
+  output: "standalone",
 };
 
 module.exports = nextConfig;
