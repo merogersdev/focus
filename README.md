@@ -18,6 +18,12 @@ This web app features a customizable Pomodoro focus timer where you can set focu
 
 - Development Server: `npm run dev`
 - Build for Production: `npm run build`
+- Run in Production Mode: `npm run start`
+- Lint `npm run lint`
+- Lint with Fix: `npm run lint:fix`
+- Run Unit Tests: `npm run test`
+- Run Unit Tests in Watch Mode: `npm run test:watch`
+- Initial Setup for Husky: `npm run prepare`
 
 ## Development
 
