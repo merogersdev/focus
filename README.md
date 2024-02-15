@@ -4,7 +4,7 @@
 
 ## Summary
 
-This web app features a customizable Pomodoro focus timer where you can set focus time, short and long break times, light and dark mode, auto-pause between pomodoros and notification sounds. Demo deployed Google Cloud
+This web app features a customizable Pomodoro focus timer where you can set focus time, short and long break times, light and dark mode, auto-pause between pomodoros and notification sounds. Demo deployed Google Cloud Run with Cloud Build CI/CD Pipeline.
 
 ## Core Features
 
