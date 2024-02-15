@@ -7,9 +7,9 @@ steps:
         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
         ".",
       ]
-  # - name: "gcr.io/cloud-builders/gcloud"
-  #   script: |
-  #     gcloud run deploy ${_IMAGE} --image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE} --region=${_LOCATION} --allow-unauthenticated
+  - name: "gcr.io/cloud-builders/gcloud"
+    script: |
+      gcloud run deploy ${_IMAGE} --image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE} --region=${_LOCATION} --allow-unauthenticated
 images:
   - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}"
 options:
