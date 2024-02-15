@@ -9,7 +9,7 @@ steps:
       ]
   - name: "gcr.io/cloud-builders/gcloud"
     script: |
-      gcloud run deploy cloudrunservice --image ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE} --region ${_LOCATION} --platform managed --allow-unauthenticated
+      gcloud run deploy ${_IMAGE} --image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE} --region ${_LOCATION} --allow-unauthenticated
 images:
   - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}"
 options:
