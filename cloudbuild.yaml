@@ -20,6 +20,7 @@ steps:
         "--region",
         "${_LOCATION}",
         "--allow-unauthenticated",
+        "--platform=managed",
       ]
 images:
   - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}"
