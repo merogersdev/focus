@@ -7,9 +7,19 @@ steps:
         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
         ".",
       ]
-  - name: "gcr.io/cloud-builders/gcloud"
-    script: |
-      gcloud run deploy focus --image=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE} --region=${_LOCATION} --allow-unauthenticated --platform managed
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "focus",
+        "--image",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
+        "--region",
+        "${_LOCATION}",
+      ]
 images:
   - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}"
 options:
