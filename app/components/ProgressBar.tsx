@@ -151,9 +151,9 @@ export default function ProgressBar() {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="stroke-slate-700 hover:stroke-slate-500 dark:stroke-slate-50 dark:hover:stroke-slate-300 transition-colors feather feather-play-circle"
           >
             {isPaused ? (

@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Focus App",
   description: "Custom Pomodoro timer created with Next.js",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 type LayoutProps = {
